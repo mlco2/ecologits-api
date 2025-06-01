@@ -1,0 +1,8 @@
+[project]
+name = "ecologits-api"
+version = "0.0.1"
+description = "Api to use ecologits solution"
+requires-python = ">=3.9,<4"
+
+[tool.poetry]
+package-mode = false
