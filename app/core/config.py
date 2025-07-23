@@ -13,6 +13,7 @@ class Settings:
     allowed_headers: List[str] = ["*"]
     
     # API Configuration
+    api_v1_prefix: str = "/v1"
     docs_url: str = "/docs"
     redoc_url: str = "/redoc"
     

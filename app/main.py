@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.v1.router import api_router
 from app.core.config import settings
 
 # Create FastAPI instance with metadata
@@ -19,3 +20,6 @@ app.add_middleware(
     allow_methods=settings.allowed_methods,
     allow_headers=settings.allowed_headers,
 )
+
+# Include API router with version prefix
+app.include_router(api_router, prefix=settings.api_v1_prefix)
