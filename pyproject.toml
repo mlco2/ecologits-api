@@ -3,10 +3,7 @@ name = "ecologits-api"
 version = "0.0.1"
 description = "Api to use ecologits solution"
 requires-python = ">=3.9,<4"
-
-[tool.poetry]
-package-mode = false
-
-[tool.poetry.dependencies]
-fastapi = {extras = ["standard"], version = "^0.115.12"}
-ecologits = "^0.7.3"
+dependencies = [
+    "fastapi[standard]>=0.115.12,<1.0.0",
+    "ecologits>=0.7.3,<1.0.0"
+]
