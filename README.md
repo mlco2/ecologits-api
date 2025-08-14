@@ -8,4 +8,5 @@
 
 ## Run tests
 
+- Install project's dependencies including dev dependencies (`uv sync --group dev`)
 - Run all tests using the following command: `uv run pytest app/`
