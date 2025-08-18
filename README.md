@@ -5,3 +5,8 @@
 - Install project's dependencies using uv (`uv sync`)
 - Start the app using the following command: `uv run fastapi dev app/main.py`
 - Check that the app is running on: localhost:8000/docs
+
+## Run tests
+
+- Install project's dependencies including dev dependencies (`uv sync --group dev`)
+- Run all tests using the following command: `uv run pytest`
