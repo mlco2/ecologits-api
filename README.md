@@ -1,10 +1,24 @@
 # Ecologits API
 
+An API to estimate the environmental impacts of LLM generation requests.
+
 ## Start the app
 
 - Install project's dependencies using uv (`uv sync`)
 - Start the app using the following command: `uv run fastapi dev app/main.py`
 - Check that the app is running on: localhost:8000/docs
+
+## Estimating environmental impacts
+
+Use the `/estimations` endpoint to estimate the environmental impacts of your LLM generation requests by providing:
+
+- Provider name (e.g., "openai")
+- Model name (e.g., "gpt-4o-mini")
+- Output token count
+- Request latency
+- Electricity mix zone (optional, defaults to "WOR")
+
+Try it out at: `localhost:8000/docs#/default/post_estimations_estimations_post`
 
 ## Run tests
 

@@ -1,4 +1,5 @@
 from ecologits.model_repository import Providers
+from ecologits.tracers.utils import llm_impacts
 from fastapi.testclient import TestClient
 from app.main import app
     
@@ -9,3 +10,74 @@ def test_get_providers():
     assert response.status_code == 200
     assert "providers" in response.json()
     assert response.json() == {"providers": [provider.value for provider in Providers]}
+
+def test_post_estimations():
+    """Test the POST /estimations endpoint"""
+    payload = {
+        "provider": "openai",
+        "model_name": "gpt-4o-mini",
+        "output_token_count": 300,
+        "request_latency": 1.5,
+        "electricity_mix_zone": "WOR"
+    }
+
+    # Get the expected impacts directly from llm_impacts
+    expected_impacts = llm_impacts(
+        provider=payload["provider"],
+        model_name=payload["model_name"],
+        output_token_count=payload["output_token_count"],
+        request_latency=payload["request_latency"],
+        electricity_mix_zone=payload["electricity_mix_zone"],
+    )
+
+    # Call the API endpoint
+    response = client.post("/v1/estimations", json=payload)
+    assert response.status_code == 200
+
+    response_data = response.json()
+    assert "impacts" in response_data
+    assert response_data["impacts"] is not None
+
+    # Compare the impacts data - convert expected_impacts to dict for comparison
+    expected_impacts_dict = expected_impacts.model_dump()
+    assert response_data["impacts"] == expected_impacts_dict
+
+def test_post_estimations_default_electricity_mix():
+    """Test the POST /estimations endpoint without electricity_mix_zone (should use default)"""
+    payload = {
+        "provider": "openai", 
+        "model_name": "gpt-4o-mini",
+        "output_token_count": 150,
+        "request_latency": 0.8
+        # electricity_mix_zone not provided, should default to "WOR"
+    }
+
+    # Get the expected impacts directly from llm_impacts
+    expected_impacts = llm_impacts(
+        provider=payload["provider"],
+        model_name=payload["model_name"],
+        output_token_count=payload["output_token_count"],
+        request_latency=payload["request_latency"],
+    )
+    
+    response = client.post("/v1/estimations", json=payload)
+    assert response.status_code == 200
+    
+    response_data = response.json()
+    assert "impacts" in response_data
+    assert response_data["impacts"] is not None
+
+    # Compare the impacts data - convert expected_impacts to dict for comparison
+    expected_impacts_dict = expected_impacts.model_dump()
+    assert response_data["impacts"] == expected_impacts_dict
+
+def test_post_estimations_missing_required_fields():
+    """Test the POST /estimations endpoint with missing required fields"""
+    payload = {
+        "provider": "openai",
+        "model_name": "gpt-4o-mini"
+        # Missing output_token_count and request_latency
+    }
+    
+    response = client.post("/v1/estimations", json=payload)
+    assert response.status_code == 422  # Unprocessable Entity for validation errors
