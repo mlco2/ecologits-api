@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Body
-from ecologits.model_repository import Providers
+from ecologits.model_repository import Providers, models
 from ecologits.tracers.utils import llm_impacts
 
 api_router = APIRouter()
@@ -13,6 +13,29 @@ def get_providers():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to retrieve providers")
+
+@api_router.get(
+    "/models/{providerName}", 
+    response_model=dict, 
+    summary="Get all models",
+    description="<p>The returned models may include warning and error indicators. For detailed information about interpreting these warning and error values, please refer to the documentation: <br/><a href='https://ecologits.ai/latest/tutorial/warnings_and_errors/'>https://ecologits.ai/latest/tutorial/warnings_and_errors/</a></p>"
+)
+def get_models(providerName: str):
+    try:
+        provider = Providers[providerName]
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Provider not found")
+
+    try:
+        filter_model = []
+        for model in models.list_models():
+            if model.provider == provider:
+                filter_model.append(model)
+        return {
+            "models": filter_model,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to retrieve models")
 
 @api_router.post(
     "/estimations",

@@ -1,4 +1,4 @@
-from ecologits.model_repository import Providers
+from ecologits.model_repository import Providers, models
 from ecologits.tracers.utils import llm_impacts
 from fastapi.testclient import TestClient
 from app.main import app
@@ -10,6 +10,17 @@ def test_get_providers():
     assert response.status_code == 200
     assert "providers" in response.json()
     assert response.json() == {"providers": [provider.value for provider in Providers]}
+
+def test_get_models_valid_provider():
+    response = client.get("/v1/models/openai")
+    assert response.status_code == 200
+    assert "models" in response.json()
+    assert isinstance(response.json()["models"], list)
+
+def test_get_models_invalid_provider():
+    response = client.get("/v1/models/invalid_provider")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Provider not found"}
 
 def test_post_estimations():
     """Test the POST /estimations endpoint"""
