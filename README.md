@@ -28,3 +28,4 @@ Try it out at: [http://localhost:8000/docs#/default/post_estimations_v1_estimati
 ## Resources
 
 - [EcoLogits Documentation - Warnings and Errors](https://ecologits.ai/latest/tutorial/warnings_and_errors/) - Learn how to interpret warning and error values from the [models endpoint](http://localhost:8000/docs#/default/get_models_v1_models__providerName__get)
+- [EcoLogits Documentation - Electricity Mix](https://ecologits.ai/latest/tutorial/impacts/#electricity-mix) - Learn how to choose the appropriate electricity mix zone for your calculations

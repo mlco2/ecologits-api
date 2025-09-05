@@ -22,6 +22,35 @@ def test_get_models_invalid_provider():
     assert response.status_code == 404
     assert response.json() == {"detail": "Provider not found"}
 
+def test_find_electricity_mix_zones_valid():
+    """Test the GET /electricity-mix-zones/{zone} endpoint with a valid zone"""
+    response = client.get("/v1/electricity-mix-zones/WOR")
+    assert response.status_code == 200
+    
+    response_data = response.json()
+    assert "electricity_mix" in response_data
+    assert response_data["electricity_mix"] is not None
+    assert "zone" in response_data["electricity_mix"]
+    assert response_data["electricity_mix"]["zone"] == "WOR"
+
+def test_find_electricity_mix_zones_invalid():
+    """Test the GET /electricity-mix-zones/{zone} endpoint with an invalid zone"""
+    response = client.get("/v1/electricity-mix-zones/INVALID")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Electricity mix zone 'INVALID' is not supported by ecologits"}
+
+def test_find_electricity_mix_zones_other_valid_zones():
+    """Test the GET /electricity-mix-zones/{zone} endpoint with other valid zones"""
+    valid_zones = ["WOR", "EEE", "USA", "FRA"]
+    
+    for zone in valid_zones:
+        response = client.get(f"/v1/electricity-mix-zones/{zone}")
+        assert response.status_code == 200
+        
+        response_data = response.json()
+        assert "electricity_mix" in response_data
+        assert response_data["electricity_mix"]["zone"] == zone
+
 def test_post_estimations():
     """Test the POST /estimations endpoint"""
     payload = {

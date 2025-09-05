@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Body
 from ecologits.model_repository import Providers, models
+from ecologits.electricity_mix_repository import electricity_mixes
 from ecologits.tracers.utils import llm_impacts
 
 api_router = APIRouter()
@@ -36,6 +37,23 @@ def get_models(providerName: str):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to retrieve models")
+
+@api_router.get(
+    "/electricity-mix-zones/{zone}", 
+    response_model=dict, 
+    summary="Get electricity mix data for a zone",
+    description="<p>Retrieve the electricity mix data for a specified zone using ISO 3166-1 alpha-3 country codes or special regional codes.</p><p><strong>Supported zone types:</strong></p><ul><li>Country codes: Use standard ISO 3166-1 alpha-3 codes (e.g., USA, FRA, DEU)</li><li>Regional codes: <code>EEE</code> for Europe, <code>WOR</code> for World average</li></ul><p><strong>Response:</strong> Returns the electricity mix composition data for the zone, or <code>404</code> if the zone is not supported by ecologits.</p><p>The electricity mix data includes the breakdown of energy sources used for electricity generation in the specified region, which is essential for accurate carbon impact calculations.</p>"
+)
+def get_electricity_mix_zones(zone: str):
+    try:
+        electricity_mix = electricity_mixes.find_electricity_mix(zone)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to retrieve electricity mix zone")
+    
+    if electricity_mix == None:
+        raise HTTPException(status_code=404, detail=f"Electricity mix zone '{zone}' is not supported by ecologits")
+    
+    return {"electricity_mix": electricity_mix}
 
 @api_router.post(
     "/estimations",
