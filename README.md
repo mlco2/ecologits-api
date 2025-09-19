@@ -6,7 +6,7 @@ An API to estimate the environmental impacts of LLM generation requests.
 
 - Install project's dependencies using uv (`uv sync`)
 - Start the app using the following command: `uv run fastapi dev app/main.py`
-- Check that the app is running on: localhost:8000/docs
+- Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ## Estimating environmental impacts
 
@@ -18,9 +18,14 @@ Use the `/estimations` endpoint to estimate the environmental impacts of your LL
 - Request latency
 - Electricity mix zone (optional, defaults to "WOR")
 
-Try it out at: `localhost:8000/docs#/default/post_estimations_estimations_post`
+Try it out at: [http://localhost:8000/docs#/default/post_estimations_v1_estimations_post](http://localhost:8000/docs#/default/post_estimations_v1_estimations_post)
 
 ## Run tests
 
 - Install project's dependencies including dev dependencies (`uv sync --group dev`)
 - Run all tests using the following command: `uv run pytest`
+
+## Resources
+
+- [EcoLogits Documentation - Warnings and Errors](https://ecologits.ai/latest/tutorial/warnings_and_errors/) - Learn how to interpret warning and error values from the [models endpoint](http://localhost:8000/docs#/default/get_models_v1_models__providerName__get)
+- [EcoLogits Documentation - Electricity Mix](https://ecologits.ai/latest/tutorial/impacts/#electricity-mix) - Learn how to choose the appropriate electricity mix zone for your calculations
