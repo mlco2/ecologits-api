@@ -2,10 +2,16 @@
 
 An API to estimate the environmental impacts of LLM generation requests.
 
-## Start the app
+## Run API without Docker
 
 - Install project's dependencies using uv (`uv sync`)
 - Start the app using the following command: `uv run fastapi dev app/main.py`
+- Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+## Run API with Docker
+
+- Build the Docker image with: `docker build -t fastapi-app .`
+- Run the Docker container locally with: `docker run -p 8000:80 fastapi-app`
 - Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ## Estimating environmental impacts
