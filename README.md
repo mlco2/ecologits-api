@@ -10,8 +10,8 @@ An API to estimate the environmental impacts of LLM generation requests.
 
 ## Run API with Docker
 
-- Build the Docker image with: `docker build -t fastapi-app .`
-- Run the Docker container locally with: `docker run -p 8000:80 fastapi-app`
+- Build the Docker image with: `docker build -t ecologits-api .`
+- Run the Docker container locally with: `docker run -p 8000:80 ecologits-api`
 - Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ## Estimating environmental impacts
