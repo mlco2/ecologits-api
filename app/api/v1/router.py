@@ -65,7 +65,7 @@ def post_estimations(
     model_name: str = Body(..., embed=True, examples=["gpt-4o-mini"], description="Name of the LLM used."),
     output_token_count: int = Body(..., embed=True, examples=[300], description="Number of generated tokens."),
     request_latency: float = Body(..., embed=True, examples=[1.5], description="Measured request latency in seconds."),
-    electricity_mix_zone: str = Body("WOR", embed=True, examples=["WOR"], description="ISO 3166-1 alpha-3 code of the electricity mix zone (WOR by default).")
+    electricity_mix_zone: str | None = Body(default=None, embed=True, examples=["WOR"], description="ISO 3166-1 alpha-3 code of the electricity mix zone (WOR by default).")
 ):
     try:
         impacts = llm_impacts(
