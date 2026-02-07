@@ -1,0 +1,26 @@
+name: Deploy to Clever Cloud
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Clever Cloud
+        uses: CleverCloud/clever-cloud-review-app@v2.0.2
+        env:
+          CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
+          CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
+          APP_NAME: el_api_prod
+        with:
+          type: 'python'
