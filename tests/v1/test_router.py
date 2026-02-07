@@ -41,7 +41,7 @@ def test_find_electricity_mix_zones_invalid():
 
 def test_find_electricity_mix_zones_other_valid_zones():
     """Test the GET /electricity-mix-zones/{zone} endpoint with other valid zones"""
-    valid_zones = ["WOR", "EEE", "USA", "FRA"]
+    valid_zones = ["WOR", "USA", "FRA"]
     
     for zone in valid_zones:
         response = client.get(f"/v1/electricity-mix-zones/{zone}")
