@@ -1,7 +1,6 @@
 name: Deploy to Clever Cloud
 
 on:
-  pull_request:
   push:
     branches:
       - main
