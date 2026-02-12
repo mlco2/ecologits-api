@@ -37,7 +37,7 @@ def test_find_electricity_mix_zones_invalid():
     """Test the GET /electricity-mix-zones/{zone} endpoint with an invalid zone"""
     response = client.get("/v1/electricity-mix-zones/INVALID")
     assert response.status_code == 404
-    assert response.json() == {"detail": "Electricity mix zone 'INVALID' is not supported by ecologits"}
+    assert response.json() == {"detail": "Electricity mix zone 'INVALID' is not supported by EcoLogits"}
 
 def test_find_electricity_mix_zones_other_valid_zones():
     """Test the GET /electricity-mix-zones/{zone} endpoint with other valid zones"""
