@@ -16,14 +16,14 @@ def get_providers():
         raise HTTPException(status_code=500, detail="Failed to retrieve providers")
 
 @api_router.get(
-    "/models/{providerName}", 
-    response_model=dict, 
+    "/models/{provider_name}",
+    response_model=dict,
     summary="Get all models",
     description="<p>The returned models may include warning and error indicators. For detailed information about interpreting these warning and error values, please refer to the documentation: <br/><a href='https://ecologits.ai/latest/tutorial/warnings_and_errors/'>https://ecologits.ai/latest/tutorial/warnings_and_errors/</a></p>"
 )
-def get_models(providerName: str):
+def get_models(provider_name: str):
     try:
-        provider = Providers[providerName]
+        provider = Providers[provider_name]
     except KeyError:
         raise HTTPException(status_code=404, detail="Provider not found")
 
@@ -42,7 +42,7 @@ def get_models(providerName: str):
     "/electricity-mix-zones/{zone}", 
     response_model=dict, 
     summary="Get electricity mix data for a zone",
-    description="<p>Retrieve the electricity mix data for a specified zone using ISO 3166-1 alpha-3 country codes or special regional codes.</p><p><strong>Supported zone types:</strong></p><ul><li>Country codes: Use standard ISO 3166-1 alpha-3 codes (e.g., USA, FRA, DEU)</li><li>Regional codes: <code>EEE</code> for Europe, <code>WOR</code> for World average</li></ul><p><strong>Response:</strong> Returns the electricity mix composition data for the zone, or <code>404</code> if the zone is not supported by ecologits.</p><p>The electricity mix data includes the breakdown of energy sources used for electricity generation in the specified region, which is essential for accurate carbon impact calculations.</p>"
+    description="<p>Retrieve the electricity mix data for a specified zone using ISO 3166-1 alpha-3 country codes or special regional codes.</p><p><strong>Supported zone types:</strong></p><ul><li>Country codes: Use standard ISO 3166-1 alpha-3 codes (e.g., USA, FRA, DEU)</li><li>Regional codes: <code>EEE</code> for Europe, <code>WOR</code> for World average</li></ul><p><strong>Response:</strong> Returns the electricity mix composition data for the zone, or <code>404</code> if the zone is not supported by EcoLogits.</p><p>The electricity mix data includes the breakdown of energy sources used for electricity generation in the specified region, which is essential for accurate carbon impact calculations.</p>"
 )
 def get_electricity_mix_zones(zone: str):
     try:
@@ -51,7 +51,7 @@ def get_electricity_mix_zones(zone: str):
         raise HTTPException(status_code=500, detail="Failed to retrieve electricity mix zone")
     
     if electricity_mix == None:
-        raise HTTPException(status_code=404, detail=f"Electricity mix zone '{zone}' is not supported by ecologits")
+        raise HTTPException(status_code=404, detail=f"Electricity mix zone '{zone}' is not supported by EcoLogits")
     
     return {"electricity_mix": electricity_mix}
 

@@ -7,9 +7,9 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
 
     # API Configuration
-    app_name: str = "Ecologits API"
-    app_version: str = "1.0.0"
-    description: str = "API to use the Ecologits solution for AI environmental impact tracking"
+    app_name: str = "EcoLogits API"
+    app_version: str = "0.0.1beta"
+    description: str = "API to use the EcoLogits solution for AI environmental impact tracking"
     
     # CORS Configuration
     allowed_origins: List[str] = ["*"]
