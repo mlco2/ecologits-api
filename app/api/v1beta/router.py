@@ -3,17 +3,17 @@ from ecologits.model_repository import Providers, models
 from ecologits.tracers.utils import llm_impacts
 from fastapi import APIRouter, Body, HTTPException
 
-from app.api.v1.responses import (
+from app.api.v1beta.responses import (
     ELECTRICITY_MIX_RESPONSES,
     ESTIMATIONS_RESPONSES,
     MODELS_RESPONSES,
     PROVIDERS_RESPONSES,
 )
 
-api_router = APIRouter()
+api_router_v1beta = APIRouter(prefix="/v1beta")
 
 
-@api_router.get(
+@api_router_v1beta.get(
     "/providers",
     response_model=dict,
     tags=["Catalog"],
@@ -30,7 +30,7 @@ def get_providers():
         raise HTTPException(status_code=500, detail="Failed to retrieve providers")
 
 
-@api_router.get(
+@api_router_v1beta.get(
     "/models/{provider_name}",
     response_model=dict,
     tags=["Catalog"],
@@ -59,7 +59,7 @@ def get_models(provider_name: str):
         raise HTTPException(status_code=500, detail="Failed to retrieve models")
 
 
-@api_router.get(
+@api_router_v1beta.get(
     "/electricity-mix-zones/{zone}",
     response_model=dict,
     tags=["Electricity mix"],
@@ -87,7 +87,7 @@ def get_electricity_mix_zones(zone: str):
     return {"electricity_mix": electricity_mix}
 
 
-@api_router.post(
+@api_router_v1beta.post(
     "/estimations",
     response_model=dict,
     tags=["Estimations"],
@@ -99,13 +99,13 @@ def post_estimations(
         ...,
         embed=True,
         examples=["openai"],
-        description="Provider identifier (use `GET /v1/providers` to list valid values).",
+        description="Provider identifier (use `GET /v1beta/providers` to list valid values).",
     ),
     model_name: str = Body(
         ...,
         embed=True,
         examples=["gpt-4o-mini"],
-        description="Model identifier as registered in EcoLogits (use `GET /v1/models/{provider}` to list valid values).",
+        description="Model identifier as registered in EcoLogits (use `GET /v1beta/models/{provider}` to list valid values).",
     ),
     output_token_count: int = Body(
         ...,
@@ -123,7 +123,7 @@ def post_estimations(
         default=None,
         embed=True,
         examples=["WOR"],
-        description="ISO 3166-1 alpha-3 zone code for the electricity mix. Defaults to `WOR` (world average). (use `GET /v1/electricity-mix-zones/{zone}` to check zone availability)",
+        description="ISO 3166-1 alpha-3 zone code for the electricity mix. Defaults to `WOR` (world average). (use `GET /v1beta/electricity-mix-zones/{zone}` to check zone availability)",
     ),
 ):
     try:

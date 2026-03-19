@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1.router import api_router
+from app.api.v1beta.router import api_router_v1beta
 from app.core.config import settings
 
 # OpenAPI tag definitions
@@ -46,4 +46,4 @@ app.add_middleware(
 )
 
 # Include API router with version prefix
-app.include_router(api_router, prefix=settings.api_v1_prefix)
+app.include_router(api_router_v1beta)
