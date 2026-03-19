@@ -1,25 +1,45 @@
-from fastapi import APIRouter, HTTPException, Body
-from ecologits.model_repository import Providers, models
 from ecologits.electricity_mix_repository import electricity_mixes
+from ecologits.model_repository import Providers, models
 from ecologits.tracers.utils import llm_impacts
+from fastapi import APIRouter, Body, HTTPException
+
+from app.api.v1.responses import (
+    ELECTRICITY_MIX_RESPONSES,
+    ESTIMATIONS_RESPONSES,
+    MODELS_RESPONSES,
+    PROVIDERS_RESPONSES,
+)
 
 api_router = APIRouter()
 
-@api_router.get("/providers", response_model=dict, summary="Get all providers")
+
+@api_router.get(
+    "/providers",
+    response_model=dict,
+    tags=["Catalog"],
+    summary="List all supported providers",
+    responses=PROVIDERS_RESPONSES,
+)
 def get_providers():
     try:
         providers_list = [provider.value for provider in Providers]
         return {
             "providers": providers_list,
         }
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Failed to retrieve providers")
+
 
 @api_router.get(
     "/models/{provider_name}",
     response_model=dict,
-    summary="Get all models",
-    description="<p>The returned models may include warning and error indicators. For detailed information about interpreting these warning and error values, please refer to the documentation: <br/><a href='https://ecologits.ai/latest/tutorial/warnings_and_errors/'>https://ecologits.ai/latest/tutorial/warnings_and_errors/</a></p>"
+    tags=["Catalog"],
+    summary="List models for a provider",
+    description=(
+        "Models may include **warning** and **error** indicators "
+        "([details](https://ecologits.ai/latest/tutorial/warnings_and_errors/))."
+    ),
+    responses=MODELS_RESPONSES,
 )
 def get_models(provider_name: str):
     try:
@@ -35,37 +55,76 @@ def get_models(provider_name: str):
         return {
             "models": filter_model,
         }
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Failed to retrieve models")
 
+
 @api_router.get(
-    "/electricity-mix-zones/{zone}", 
-    response_model=dict, 
-    summary="Get electricity mix data for a zone",
-    description="<p>Retrieve the electricity mix data for a specified zone using ISO 3166-1 alpha-3 country codes or special regional codes.</p><p><strong>Supported zone types:</strong></p><ul><li>Country codes: Use standard ISO 3166-1 alpha-3 codes (e.g., USA, FRA, DEU)</li><li>Regional codes: <code>EEE</code> for Europe, <code>WOR</code> for World average</li></ul><p><strong>Response:</strong> Returns the electricity mix composition data for the zone, or <code>404</code> if the zone is not supported by EcoLogits.</p><p>The electricity mix data includes the breakdown of energy sources used for electricity generation in the specified region, which is essential for accurate carbon impact calculations.</p>"
+    "/electricity-mix-zones/{zone}",
+    response_model=dict,
+    tags=["Electricity mix"],
+    summary="Get electricity mix for a zone",
+    description=(
+        "Use ISO 3166-1 alpha-3 codes (`USA`, `FRA`, `DEU`) "
+        "or regional codes (`EEE` for Europe, `WOR` for World average)."
+    ),
+    responses=ELECTRICITY_MIX_RESPONSES,
 )
 def get_electricity_mix_zones(zone: str):
     try:
         electricity_mix = electricity_mixes.find_electricity_mix(zone)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to retrieve electricity mix zone")
-    
-    if electricity_mix == None:
-        raise HTTPException(status_code=404, detail=f"Electricity mix zone '{zone}' is not supported by EcoLogits")
-    
+    except Exception:
+        raise HTTPException(
+            status_code=500, detail="Failed to retrieve electricity mix zone"
+        )
+
+    if electricity_mix is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Electricity mix zone '{zone}' is not supported by EcoLogits",
+        )
+
     return {"electricity_mix": electricity_mix}
+
 
 @api_router.post(
     "/estimations",
     response_model=dict,
-    summary="Estimate the impacts of an LLM generation requests"
+    tags=["Estimations"],
+    summary="Estimate environmental impacts of an LLM request",
+    responses=ESTIMATIONS_RESPONSES,
 )
 def post_estimations(
-    provider: str = Body(..., embed=True, examples=["openai"], description="Name of the provider."),
-    model_name: str = Body(..., embed=True, examples=["gpt-4o-mini"], description="Name of the LLM used."),
-    output_token_count: int = Body(..., embed=True, examples=[300], description="Number of generated tokens."),
-    request_latency: float = Body(..., embed=True, examples=[1.5], description="Measured request latency in seconds."),
-    electricity_mix_zone: str | None = Body(default=None, embed=True, examples=["WOR"], description="ISO 3166-1 alpha-3 code of the electricity mix zone (WOR by default).")
+    provider: str = Body(
+        ...,
+        embed=True,
+        examples=["openai"],
+        description="Provider identifier (use `GET /v1/providers` to list valid values).",
+    ),
+    model_name: str = Body(
+        ...,
+        embed=True,
+        examples=["gpt-4o-mini"],
+        description="Model identifier as registered in EcoLogits (use `GET /v1/models/{provider}` to list valid values).",
+    ),
+    output_token_count: int = Body(
+        ...,
+        embed=True,
+        examples=[300],
+        description="Number of tokens generated by the model.",
+    ),
+    request_latency: float = Body(
+        ...,
+        embed=True,
+        examples=[1.5],
+        description="Measured request latency in seconds.",
+    ),
+    electricity_mix_zone: str | None = Body(
+        default=None,
+        embed=True,
+        examples=["WOR"],
+        description="ISO 3166-1 alpha-3 zone code for the electricity mix. Defaults to `WOR` (world average). (use `GET /v1/electricity-mix-zones/{zone}` to check zone availability)",
+    ),
 ):
     try:
         impacts = llm_impacts(
@@ -77,5 +136,5 @@ def post_estimations(
         )
         return {"impacts": impacts}
 
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Failed to Estimate impacts")
