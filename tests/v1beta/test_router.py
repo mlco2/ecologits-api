@@ -8,28 +8,28 @@ client = TestClient(app)
 
 
 def test_get_providers():
-    response = client.get("/v1/providers")
+    response = client.get("/v1beta/providers")
     assert response.status_code == 200
     assert "providers" in response.json()
     assert response.json() == {"providers": [provider.value for provider in Providers]}
 
 
 def test_get_models_valid_provider():
-    response = client.get("/v1/models/openai")
+    response = client.get("/v1beta/models/openai")
     assert response.status_code == 200
     assert "models" in response.json()
     assert isinstance(response.json()["models"], list)
 
 
 def test_get_models_invalid_provider():
-    response = client.get("/v1/models/invalid_provider")
+    response = client.get("/v1beta/models/invalid_provider")
     assert response.status_code == 404
     assert response.json() == {"detail": "Provider not found"}
 
 
 def test_find_electricity_mix_zones_valid():
     """Test the GET /electricity-mix-zones/{zone} endpoint with a valid zone"""
-    response = client.get("/v1/electricity-mix-zones/WOR")
+    response = client.get("/v1beta/electricity-mix-zones/WOR")
     assert response.status_code == 200
 
     response_data = response.json()
@@ -41,7 +41,7 @@ def test_find_electricity_mix_zones_valid():
 
 def test_find_electricity_mix_zones_invalid():
     """Test the GET /electricity-mix-zones/{zone} endpoint with an invalid zone"""
-    response = client.get("/v1/electricity-mix-zones/INVALID")
+    response = client.get("/v1beta/electricity-mix-zones/INVALID")
     assert response.status_code == 404
     assert response.json() == {
         "detail": "Electricity mix zone 'INVALID' is not supported by EcoLogits"
@@ -53,7 +53,7 @@ def test_find_electricity_mix_zones_other_valid_zones():
     valid_zones = ["WOR", "USA", "FRA"]
 
     for zone in valid_zones:
-        response = client.get(f"/v1/electricity-mix-zones/{zone}")
+        response = client.get(f"/v1beta/electricity-mix-zones/{zone}")
         assert response.status_code == 200
 
         response_data = response.json()
@@ -81,7 +81,7 @@ def test_post_estimations():
     )
 
     # Call the API endpoint
-    response = client.post("/v1/estimations", json=payload)
+    response = client.post("/v1beta/estimations", json=payload)
     assert response.status_code == 200
 
     response_data = response.json()
@@ -111,7 +111,7 @@ def test_post_estimations_default_electricity_mix():
         request_latency=payload["request_latency"],
     )
 
-    response = client.post("/v1/estimations", json=payload)
+    response = client.post("/v1beta/estimations", json=payload)
     assert response.status_code == 200
 
     response_data = response.json()
@@ -131,5 +131,5 @@ def test_post_estimations_missing_required_fields():
         # Missing output_token_count and request_latency
     }
 
-    response = client.post("/v1/estimations", json=payload)
+    response = client.post("/v1beta/estimations", json=payload)
     assert response.status_code == 422  # Unprocessable Entity for validation errors
