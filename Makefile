@@ -5,7 +5,7 @@ start:
 	uv run fastapi dev app/main.py
 
 build-docker:
-	docker build -t ecologits-api
+	docker build -t ecologits-api .
 
 run-docker:
 	docker run -p 8000:80 ecologits-api
