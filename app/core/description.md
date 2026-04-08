@@ -22,6 +22,6 @@ Results are returned as **approximation intervals** (min/max range), not single 
 
 ## Useful links
 
-- [EcoLogits documentation](https://ecologits.ai/dev/)
-- [Methodology](https://ecologits.ai/dev/methodology/)
+- [EcoLogits documentation](https://ecologits.ai/)
+- [Methodology](https://ecologits.ai/latest/methodology/)
 - [GitHub repository](https://github.com/mlco2/ecologits)

@@ -66,7 +66,7 @@ def get_models(provider_name: str):
     summary="Get electricity mix for a zone",
     description=(
         "Use ISO 3166-1 alpha-3 codes (`USA`, `FRA`, `DEU`) "
-        "or regional codes (`EEE` for Europe, `WOR` for World average)."
+        "(or `WOR` for World average)."
     ),
     responses=ELECTRICITY_MIX_RESPONSES,
 )
