@@ -10,6 +10,13 @@ An API to estimate the environmental impacts of LLM generation requests.
 
 ## Run API with Docker
 
+### Use published image
+
+- Start container with: `docker run -p 8000:80 ghcr.io/mlco2/ecologits-api:latest`
+- Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+### Build image yourself
+
 - Build the Docker image with: `docker build -t ecologits-api .`
 - Run the Docker container locally with: `docker run -p 8000:80 ecologits-api`
 - Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
