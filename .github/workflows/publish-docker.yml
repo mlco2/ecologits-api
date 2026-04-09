@@ -1,10 +1,9 @@
 name: Build and Publish Docker Image
 
 on:
-  workflow_run:
-    workflows: ["pytest"]
-    types: [completed]
-    branches: [main]
+  push:
+    tags:
+      - '*.*.*'
 
 permissions:
   contents: read
@@ -13,7 +12,6 @@ permissions:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
@@ -27,8 +25,9 @@ jobs:
         id: meta
         with:
           images: ghcr.io/${{ github.repository }}
+          flavor: |
+            latest=true
           tags: |
-            type=raw,value=latest
             type=sha,prefix=
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
