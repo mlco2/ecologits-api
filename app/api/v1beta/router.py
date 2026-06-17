@@ -34,6 +34,19 @@ def _public_video_model(model: dict) -> dict:
     }
 
 
+def _normalize_llm_model(
+    provider: str | None, model_name: str
+) -> tuple[str | None, str]:
+    if "/" not in model_name:
+        return provider, model_name
+
+    qualified_provider, qualified_model_name = model_name.split("/", maxsplit=1)
+    if provider is None or provider == qualified_provider:
+        return qualified_provider, qualified_model_name
+
+    return provider, model_name
+
+
 @api_router_v1beta.get(
     "/providers",
     response_model=dict,
@@ -162,17 +175,17 @@ def get_electricity_mix_zones(zone: str):
     responses=ESTIMATIONS_RESPONSES,
 )
 def post_estimations(
-    provider: str = Body(
-        ...,
+    provider: str | None = Body(
+        default=None,
         embed=True,
         examples=["openai"],
-        description="Provider identifier (use `GET /v1beta/providers` to list valid values).",
+        description="Optional provider identifier. Required only when `model_name` is not provider-qualified.",
     ),
     model_name: str = Body(
         ...,
         embed=True,
-        examples=["gpt-4o-mini"],
-        description="Model identifier as registered in EcoLogits (use `GET /v1beta/models/{provider}` to list valid values).",
+        examples=["openai/gpt-5", "gpt-5"],
+        description="Model identifier, either provider-qualified (`openai/gpt-5`) or short when `provider` is provided (`gpt-5`).",
     ),
     output_token_count: int = Body(
         ...,
@@ -201,6 +214,19 @@ def post_estimations(
     ),
 ):
     try:
+        provider, model_name = _normalize_llm_model(
+            provider=provider,
+            model_name=model_name,
+        )
+        if provider is None:
+            error = ModelNotRegisteredError(
+                message=(
+                    "Could not infer provider from model_name. Use a provider-qualified "
+                    "model name such as `openai/gpt-5`, or provide `provider`."
+                )
+            )
+            return {"impacts": ImpactsOutput(errors=[error])}
+
         impacts = llm_impacts(
             provider=provider,
             model_name=model_name,
