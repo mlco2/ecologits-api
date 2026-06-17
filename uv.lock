@@ -76,16 +76,16 @@ wheels = [
 
 [[package]]
 name = "ecologits"
-version = "0.10.2"
+version = "0.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "packaging" },
     { name = "pydantic" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3f/7b/a8af782f0305bd08f6c61614680f9c4a70e4c30831bba435d5bab603bac4/ecologits-0.10.2.tar.gz", hash = "sha256:cdbd1f67a82d4008c6bb2d3373912f5f58fba4eedb25531972544b950bab5332", size = 1020789, upload-time = "2026-06-04T17:31:08.75Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/c7/efce45391a269c5f18060f963e5ee876c43e6d76529fa7ca447f9e3bedef/ecologits-0.11.0.tar.gz", hash = "sha256:bcd233c5b01c3cb8c98a7c1dc919668bf8528d23f667bd00769ca92d1254227b", size = 1031586, upload-time = "2026-06-17T16:02:06.976Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/06/6b/a6d8354a9816401f52f5a8a08b038cf525b40f2b4efddda41d72eb392eb4/ecologits-0.10.2-py3-none-any.whl", hash = "sha256:d98973a196566f640c8b213f371b44b6d0b11a4b49a9551d3771fee77ac798d7", size = 50769, upload-time = "2026-06-04T17:31:09.999Z" },
+    { url = "https://files.pythonhosted.org/packages/f3/d3/bc89b4a3f959eb0f14585fe384c27dd154fb8f19a569d712469a98515165/ecologits-0.11.0-py3-none-any.whl", hash = "sha256:dabbba7864b8be33c5bba025ffcffccc0302086e23b12ae67f087ce554b23506", size = 57089, upload-time = "2026-06-17T16:02:05.955Z" },
 ]
 
 [[package]]
@@ -107,7 +107,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "ecologits", specifier = ">=0.10.2,<1.0.0" },
+    { name = "ecologits", specifier = ">=0.11.0,<1.0.0" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.128.4,<1.0.0" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "ruff", specifier = ">=0.15.6" },
