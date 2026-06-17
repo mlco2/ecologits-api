@@ -186,11 +186,18 @@ def post_estimations(
         examples=[1.5],
         description="Measured request latency in seconds.",
     ),
+    datacenter_location: str | None = Body(
+        default=None,
+        embed=True,
+        examples=["USA"],
+        description="ISO 3166-1 alpha-3 datacenter zone code. Uses the provider default when omitted.",
+    ),
     electricity_mix_zone: str | None = Body(
         default=None,
         embed=True,
         examples=["WOR"],
-        description="ISO 3166-1 alpha-3 zone code for the electricity mix. Defaults to `WOR` (world average). (use `GET /v1beta/electricity-mix-zones/{zone}` to check zone availability)",
+        deprecated=True,
+        description="Deprecated. Use `datacenter_location` instead.",
     ),
 ):
     try:
@@ -202,7 +209,7 @@ def post_estimations(
             # the TPS and TTFT data from OpenRouter.
             # TODO: remove the high value when the estimations module in EcoLogits (Python) is ready
             request_latency=request_latency if request_latency is not None else 1e6,
-            electricity_mix_zone=electricity_mix_zone,
+            electricity_mix_zone=datacenter_location if datacenter_location is not None else electricity_mix_zone,
         )
         return {"impacts": impacts}
 
