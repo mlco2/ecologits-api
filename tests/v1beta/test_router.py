@@ -137,7 +137,7 @@ def test_post_estimations_missing_required_fields():
 
 
 def test_post_expert_estimations():
-    """Test the POST /expert-estimations endpoint with known LLM data to check identity with /estimations"""
+    """Test the POST /expert-estimations endpoint and validate consistency with model results"""
     payload = {
         "output_token_count": 300,
         "model_active_params": 32.3,
