@@ -147,3 +147,64 @@ ESTIMATIONS_RESPONSES = {
         },
     },
 }
+
+VIDEO_ESTIMATIONS_RESPONSES = {
+    200: {
+        "description": "Video generation environmental impact estimation with min/max intervals.",
+        "content": {
+            "application/json": {
+                "example": {
+                    "impacts": {
+                        "energy": {
+                            "type": "energy",
+                            "name": "Energy",
+                            "value": {
+                                "min": 0.18035949832689935,
+                                "max": 0.3066421823877012,
+                            },
+                            "unit": "kWh",
+                        },
+                        "gwp": {
+                            "type": "GWP",
+                            "name": "Global Warming Potential",
+                            "value": {
+                                "min": 0.09286706406226485,
+                                "max": 0.15074115534048974,
+                            },
+                            "unit": "kgCO2eq",
+                        },
+                        "adpe": {
+                            "type": "ADPe",
+                            "name": "Abiotic Depletion Potential (elements)",
+                            "value": {
+                                "min": 5.656388246092277e-7,
+                                "max": 5.673423780172079e-7,
+                            },
+                            "unit": "kgSbeq",
+                        },
+                        "pe": {
+                            "type": "PE",
+                            "name": "Primary Energy",
+                            "value": {
+                                "min": 0.5207381363479325,
+                                "max": 0.847444068281633,
+                            },
+                            "unit": "MJ",
+                        },
+                        "wcf": {
+                            "type": "WCF",
+                            "name": "Water Consumption Footprint",
+                            "value": {
+                                "min": 0.7903653815848607,
+                                "max": 1.3437571502533046,
+                            },
+                            "unit": "L",
+                        },
+                        "warnings": None,
+                        "errors": None,
+                    }
+                }
+            }
+        },
+    },
+}

@@ -11,9 +11,17 @@ tags_metadata = [
         "description": "Estimate the environmental impacts of an LLM inference request.",
     },
     {
+        "name": "Video estimations",
+        "description": "Estimate the environmental impacts of a video generation request.",
+    },
+    {
         "name": "Catalog",
         "description": "Browse the AI providers and models supported by EcoLogits. "
         "Use these endpoints to discover valid values for the estimation request.",
+    },
+    {
+        "name": "Video catalog",
+        "description": "Browse the video generation providers and models supported by EcoLogits.",
     },
     {
         "name": "Electricity mix",
