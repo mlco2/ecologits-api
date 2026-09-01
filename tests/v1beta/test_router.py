@@ -133,3 +133,50 @@ def test_post_estimations_missing_required_fields():
 
     response = client.post("/v1beta/estimations", json=payload)
     assert response.status_code == 422  # Unprocessable Entity for validation errors
+
+
+
+def test_post_expert_estimations():
+    """Test the POST /expert-estimations endpoint and validate consistency with model results"""
+    payload = {
+        "output_token_count": 300,
+        "model_active_params": 32.3,
+        "model_total_params": 32.3,
+        "tps": 26.8,
+        "ttft": 0.59,
+        "datacenter_pue": 1.09,
+        "datacenter_wue": 0.999,
+        "electricity_mix_adpe": 9.855e-8,
+        "electricity_mix_pe": 9.6884,
+        "electricity_mix_gwp": 0.3844,
+        "electricity_mix_wue": 3.1321
+    }
+
+    # Get the expected impacts directly from llm_impacts
+    expected_impacts = compute_llm_impacts(
+            output_token_count=payload["output_token_count"],
+            model_active_parameter_count= payload["model_active_params"],
+            model_total_parameter_count = payload["model_total_params"],
+            tps = payload["tps"],
+            ttft = payload["ttft"],
+            datacenter_pue = payload["datacenter_pue"],
+            datacenter_wue = payload["datacenter_wue"],
+            if_electricity_mix_adpe = payload["electricity_mix_adpe"],
+            if_electricity_mix_pe = payload["electricity_mix_pe"],
+            if_electricity_mix_gwp = payload["electricity_mix_gwp"],
+            if_electricity_mix_wue = payload["electricity_mix_wue"]
+    )
+
+    # Call the API endpoint
+    response = client.post("/v1beta/expert-estimations", json=payload)
+    assert response.status_code == 200
+
+    response_data = response.json()
+    assert "impacts" in response_data
+    assert response_data["impacts"] is not None
+
+    # Compare the impacts data - convert expected_impacts to dict for comparison
+    expected_impacts_dict = expected_impacts.model_dump()
+    assert response_data["impacts"] == expected_impacts_dict
+
+    
