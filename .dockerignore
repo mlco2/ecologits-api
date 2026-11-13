@@ -1,6 +1,9 @@
 .git
 .github
 .context
+.work
+.env
+.env.*
 .venv
 .pytest_cache
 .ruff_cache

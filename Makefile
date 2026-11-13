@@ -8,7 +8,7 @@ build-docker:
 	docker build -t ecologits-api .
 
 run-docker:
-	docker run -p 8000:80 ecologits-api
+	docker run -p 8000:8000 ecologits-api
 
 test:
 	uv run pytest

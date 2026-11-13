@@ -31,13 +31,13 @@ curl -X POST "https://api.ecologits.ai/v1/estimations" \
 
 ### Use published image
 
-- Start container with: `docker run -p 8000:80 ghcr.io/mlco2/ecologits-api:latest`
+- Start container with: `docker run -p 8000:8000 ghcr.io/mlco2/ecologits-api:latest`
 - Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ### Build image yourself
 
 - Build the Docker image with: `docker build -t ecologits-api .`
-- Run the Docker container locally with: `docker run -p 8000:80 ecologits-api`
+- Run the Docker container locally with: `docker run -p 8000:8000 ecologits-api`
 - Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ## Estimating environmental impacts
