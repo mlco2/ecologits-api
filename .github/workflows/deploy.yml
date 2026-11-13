@@ -14,19 +14,22 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Create deployment branch at the tested revision
+        run: git switch --create deploy-tested
 
       - name: Install Clever Tools CLI
         run: |
           CC_VERSION=latest
-          curl -s -O https://clever-tools.clever-cloud.com/releases/${CC_VERSION}/clever-tools-${CC_VERSION}_linux.tar.gz
+          curl --fail --silent --show-error -O https://clever-tools.clever-cloud.com/releases/${CC_VERSION}/clever-tools-${CC_VERSION}_linux.tar.gz
           tar -xvf clever-tools-${CC_VERSION}_linux.tar.gz
-          PATH=${PATH}:$(pwd)/clever-tools-${CC_VERSION}_linux
 
       - name: Login to Clever Cloud
         run: ./clever-tools-latest_linux/clever login --token ${{ secrets.CLEVER_TOKEN }} --secret ${{ secrets.CLEVER_SECRET }}
@@ -34,4 +37,5 @@ jobs:
       - name: Deploy API to Clever Cloud
         run: |
           ./clever-tools-latest_linux/clever link ${{ secrets.CLEVER_APP_ID }}
-          ./clever-tools-latest_linux/clever deploy -f
+          ./clever-tools-latest_linux/clever env set CC_DOCKER_EXPOSED_HTTP_PORT 8000
+          ./clever-tools-latest_linux/clever deploy -f --branch deploy-tested
