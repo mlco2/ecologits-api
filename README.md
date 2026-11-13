@@ -33,7 +33,7 @@ Requires Python 3.11 or newer.
 
 ## Run API with Docker
 
-The image runs as a non-root user (UID/GID `10001`) and listens on `0.0.0.0:8000`. Python logs are unbuffered. It includes application code and runtime dependencies; uv, Ruff, pytest, local `.env` files, and `.work/` are excluded. Pass configuration with Docker's `-e` or `--env-file` options.
+The image runs as a non-root user (UID/GID `10001`) and listens on `0.0.0.0:8000`. Python logs are unbuffered. It includes application code and runtime dependencies; uv, Ruff, pytest, and local `.env` files are excluded. Pass configuration with Docker's `-e` or `--env-file` options.
 
 ### Use published image
 
