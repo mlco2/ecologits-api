@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   checks:
-    uses: ./.github/workflows/pytest.yaml
+    uses: ./.github/workflows/ci.yml
 
   docker:
     needs: checks
