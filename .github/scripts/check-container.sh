@@ -15,7 +15,7 @@ trap cleanup EXIT
 address=$(docker port "$container_id" 8000/tcp)
 curl --fail --silent --show-error --retry 30 --retry-all-errors \
   --retry-delay 1 --retry-max-time 45 --max-time 5 \
-  --output /dev/null "http://$address/v1beta/providers"
+  --output /dev/null "http://$address/health"
 
 docker exec -i "$container_id" /app/.venv/bin/python - <<'PY'
 import importlib.metadata
@@ -45,6 +45,10 @@ assert not list(Path('/app').rglob('.work'))
 print('Runtime checks passed; EcoLogits', importlib.metadata.version('ecologits'))
 
 base = 'http://127.0.0.1:8000'
+with urllib.request.urlopen(base + '/health', timeout=10) as response:
+    assert response.status == 200
+    assert json.load(response) == {'status': 'ok'}
+print('GET /health: 200')
 for path in ('/docs', '/openapi.json', '/v1beta/providers', '/v1beta/models/openai', '/v1beta/electricity-mix-zones/WOR'):
     with urllib.request.urlopen(base + path, timeout=10) as response:
         assert response.status == 200
