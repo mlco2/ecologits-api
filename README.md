@@ -23,7 +23,7 @@ curl -X POST "http://localhost:8000/v1beta/estimations" \
   -d '{"provider": "openai", "model_name": "gpt-4o-mini", "output_token_count":150, "request_latency":1.2}'
 ```
 
-The current checkout uses EcoLogits `0.11.3` and exposes routes under `/v1beta`.
+The current checkout uses EcoLogits `0.11.3` and exposes estimation and catalog routes under `/v1beta`. Use `GET /health` for a lightweight health check; it returns HTTP `200` with `{"status":"ok"}` when the API is running.
 
 ## Run API without Docker
 

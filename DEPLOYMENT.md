@@ -50,7 +50,7 @@ For a managed container service or Kubernetes, use the same image with these set
 | Container port | `8000`, HTTP |
 | Runtime user | Non-root, UID/GID `10001` |
 | Startup command | Use the image's default command. |
-| Health check | `GET /v1beta/providers`, expecting HTTP `200` |
+| Health check | `GET /health`, expecting HTTP `200` and `{"status":"ok"}` |
 | Environment | Set `ALLOWED_ORIGINS` if a browser frontend calls the API. |
 | Persistent storage | None |
 
@@ -73,8 +73,10 @@ Configure HTTPS, authentication, and any rate limits at the gateway. The API has
 Check the running container locally:
 
 ```bash
-curl --fail http://127.0.0.1:8000/v1beta/providers
+curl --fail http://127.0.0.1:8000/health
 ```
+
+Expect `{"status":"ok"}`. This lightweight check confirms the API is responding; it does not run an estimation or call external services.
 
 Then try an estimation:
 

@@ -45,5 +45,11 @@ app.add_middleware(
     allow_headers=settings.allowed_headers,
 )
 
+
+@app.get("/health", tags=["Health"], summary="Check API health")
+async def health_check() -> dict[str, str]:
+    return {"status": "ok"}
+
+
 # Include API router with version prefix
 app.include_router(api_router_v1beta)
