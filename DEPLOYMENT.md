@@ -35,7 +35,7 @@ From a clean checkout of your chosen revision, use Docker with BuildKit support.
 docker build -t ecologits-api .
 ```
 
-Use `ecologits-api` in place of the published image in the run command. The Dockerfile copies only the application and dependency manifests into the image. Local `.env` files and `.work/` are excluded from the build context; pass configuration through environment variables at runtime.
+Use `ecologits-api` in place of the published image in the run command. The Dockerfile copies only the application and dependency manifests into the image. Local `.env` files are excluded from the build context; pass configuration through environment variables at runtime.
 
 ## 2. Connect it to your infrastructure
 
