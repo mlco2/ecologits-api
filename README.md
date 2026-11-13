@@ -15,10 +15,8 @@ Part of [EcoLogits](https://github.com/mlco2/ecologits), maintained by the [Code
 
 ## Quick try
 
-Start the API using one of the options below, then send a request:
-
 ```bash
-curl -X POST "http://localhost:8000/v1beta/estimations" \
+curl -X POST "https://api.ecologits.ai/v1beta/estimations" \
   -H "Content-Type: application/json" \
   -d '{"provider": "openai", "model_name": "gpt-4o-mini", "output_token_count":150, "request_latency":1.2}'
 ```
@@ -26,6 +24,8 @@ curl -X POST "http://localhost:8000/v1beta/estimations" \
 The API uses EcoLogits `0.11.3` and exposes estimation and catalog routes under `/v1beta`. Use `GET /health` for a lightweight health check; it returns HTTP `200` with `{"status":"ok"}` when the API is running.
 
 ## Run API without Docker
+
+Requires Python 3.11 or newer.
 
 - Install the project's locked dependencies using uv (`uv sync --locked --no-dev`)
 - Start the app using the following command: `uv run --locked --no-dev fastapi dev app/main.py`
@@ -79,7 +79,7 @@ Try it out at: [http://localhost:8000/docs#/Estimations/post_estimations_v1beta_
 - Run all tests: `uv run --locked --no-sync pytest`.
 - Check a locally built Docker image: `bash .github/scripts/check-container.sh ecologits-api`.
 
-CI runs the tests on Python 3.11 and 3.13, lints the Dockerfile with Hadolint, and builds and checks the production container on pull requests and pushes to `main`. Release tags run the same checks before publishing images for `linux/amd64` and `linux/arm64`. Clever Cloud deployment follows successful checks on `main` and forwards HTTP traffic to container port `8000`.
+CI runs the tests on Python 3.11 and 3.13, lints the Dockerfile with Hadolint, and builds and checks the production container on pull requests and pushes to `main`. Release tags run the same checks before publishing images for `linux/amd64` and `linux/arm64`. Clever Cloud deployment follows successful checks on `main`.
 
 ## Resources
 
