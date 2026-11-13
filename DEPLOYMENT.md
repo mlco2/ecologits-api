@@ -60,8 +60,6 @@ If your platform requires a different port, override the startup command and upd
 
 The default command does not automatically read a platform's `PORT` environment variable.
 
-On Clever Cloud, set `CC_DOCKER_EXPOSED_HTTP_PORT=8000` so the platform forwards HTTP traffic to the container. The deployment workflow configures this before deploying.
-
 Point your gateway or reverse proxy to the API and give it a company URL, such as `https://ecologits-api.example.com`. For Docker on a VM, the example uses `http://127.0.0.1:8000` as the backend. On other platforms, use the service's private address and container port.
 
 Configure HTTPS, authentication, and any rate limits at the gateway. The API has no built-in authentication; restrict direct access to the backend so callers go through your gateway. CORS only controls browser access and does not authenticate requests.
@@ -83,10 +81,10 @@ curl --fail http://127.0.0.1:8000/v1beta/estimations \
   -H 'Content-Type: application/json' \
   -d '{
     "provider": "openai",
-    "model_name": "gpt-4o-mini",
+    "model_name": "gpt-5.6-luna",
     "output_token_count": 150,
     "request_latency": 1.2,
-    "electricity_mix_zone": "WOR"
+    "electricity_mix_zone": "USA"
   }'
 ```
 
