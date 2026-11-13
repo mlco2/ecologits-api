@@ -100,7 +100,9 @@ The API uses bundled data and can run without internet access. Follow the deploy
 - Use private DNS and an internal gateway with your usual access controls. Authentication, certificates, and logging must also work offline.
 - Verify `/health` and an estimation request with internet access blocked.
 
-The `/docs` and `/redoc` pages need public CDN assets. For offline use, access `/openapi.json` with an API client or [self-host the documentation assets](https://fastapi.tiangolo.com/how-to/custom-docs-ui-assets/).
+The `/docs` and `/redoc` pages need public CDN assets. Disable both at deployment by adding `-e DOCS_URL= -e REDOC_URL=` before the image name in your `docker run` command. On other platforms, set `DOCS_URL` and `REDOC_URL` to empty strings. Set only one to disable that page independently.
+
+The API and `/openapi.json` remain available. To keep the documentation pages available offline, [self-host their assets](https://fastapi.tiangolo.com/how-to/custom-docs-ui-assets/).
 
 To update the API or its bundled data, import a new image.
 
