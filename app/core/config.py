@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     # API Configuration
     app_name: str = "EcoLogits API"
-    app_version: str = "0.0.2beta"
+    app_version: str = "0.0.3beta"
     description: str = _DESCRIPTION_FILE.read_text()
 
     # CORS Configuration
