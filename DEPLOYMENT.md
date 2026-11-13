@@ -23,17 +23,13 @@ docker run -d \
 
 The API is now available at `http://127.0.0.1:8000`, with interactive documentation at `http://127.0.0.1:8000/docs`. The example binds to localhost so a reverse proxy on the same machine can forward requests to it.
 
-Port `8000` applies to images built from this revision. Older releases may listen on container port `80`; use `127.0.0.1:8000:80` for those images. Build this revision locally to use the updated image before its release.
-
 Use a specific release tag or image digest instead of `latest` for production so deployments use a known version. You can also mirror the image into your company's registry.
 
 Optional: if a browser frontend calls the API from a different origin, set `ALLOWED_ORIGINS` to its origin, for example by adding `-e 'ALLOWED_ORIGINS=["https://portal.example.com"]'` before the image name. This is unnecessary for backend-to-backend calls. The default is `["*"]`; setting explicit origins restricts browser access, but does not authenticate callers. CORS values must be JSON arrays.
 
 ### Build your own image instead
 
-From a clean checkout of your chosen revision:
-
-Use Docker with BuildKit support; the build temporarily mounts uv to install the locked runtime dependencies.
+From a clean checkout of your chosen revision, use Docker with BuildKit support. The build temporarily mounts uv to install the locked runtime dependencies:
 
 ```bash
 docker build -t ecologits-api .
@@ -53,6 +49,8 @@ For a managed container service or Kubernetes, use the same image with these set
 | Health check | `GET /health`, expecting HTTP `200` and `{"status":"ok"}` |
 | Environment | Set `ALLOWED_ORIGINS` if a browser frontend calls the API. |
 | Persistent storage | None |
+
+Configure HTTP health probes in your platform or monitoring system using `/health`. The route is unversioned and confirms that the API is responding. The image does not define a Docker `HEALTHCHECK` instruction.
 
 If your platform requires a different port, override the startup command and update the target port and health check accordingly. For example, to listen on port `8080`:
 
@@ -92,7 +90,7 @@ curl --fail http://127.0.0.1:8000/v1beta/estimations \
   }'
 ```
 
-Expect HTTP `200` and a JSON response containing `impacts`. Check that payload for any warnings or errors. The routes in this checkout use `/v1beta`, and the model field is `model_name`.
+Expect HTTP `200` and a JSON response containing `impacts`. Check that payload for any warnings or errors. Estimation and catalog routes use `/v1beta`, and the model field is `model_name`. Use `/health` for health checks.
 
 Repeat these checks through your company URL, adding the credentials required by your gateway. Configure your applications to call that URL instead of the public EcoLogits API.
 

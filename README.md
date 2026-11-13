@@ -23,7 +23,7 @@ curl -X POST "http://localhost:8000/v1beta/estimations" \
   -d '{"provider": "openai", "model_name": "gpt-4o-mini", "output_token_count":150, "request_latency":1.2}'
 ```
 
-The current checkout uses EcoLogits `0.11.3` and exposes estimation and catalog routes under `/v1beta`. Use `GET /health` for a lightweight health check; it returns HTTP `200` with `{"status":"ok"}` when the API is running.
+The API uses EcoLogits `0.11.3` and exposes estimation and catalog routes under `/v1beta`. Use `GET /health` for a lightweight health check; it returns HTTP `200` with `{"status":"ok"}` when the API is running.
 
 ## Run API without Docker
 
@@ -40,7 +40,7 @@ The image runs as a non-root user (UID/GID `10001`) and listens on `0.0.0.0:8000
 - Start container with: `docker run -p 8000:8000 ghcr.io/mlco2/ecologits-api:latest`
 - Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-These port mappings apply to images built from this revision. Older images may listen on port `80`; keep using `-p 8000:80` for those versions. The published `latest` tag is updated when a release tag is pushed.
+The published `latest` tag is updated after the release workflow succeeds. Use a specific release tag or digest for production.
 
 ### Build image yourself
 
@@ -48,6 +48,14 @@ These port mappings apply to images built from this revision. Older images may l
 - Build the Docker image with: `docker build -t ecologits-api .`
 - Run the Docker container locally with: `docker run -p 8000:8000 ecologits-api`
 - Check that the app is running on: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+## Health checks
+
+```bash
+curl --fail http://localhost:8000/health
+```
+
+Expect HTTP `200` with `{"status":"ok"}`. This unversioned endpoint confirms the API is responding without running an estimation or calling external services. Configure your platform's HTTP probe to use `/health` on container port `8000`.
 
 ## Deploy on your own infrastructure
 
