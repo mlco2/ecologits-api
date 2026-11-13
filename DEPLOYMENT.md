@@ -94,14 +94,15 @@ Repeat these checks through your company URL, adding the credentials required by
 
 ## Fully offline deployment in a private VPC
 
-The API calculates estimates using bundled data, so it does not need internet access at runtime. The deployment steps above still apply, with these changes:
+The API uses bundled data and can run without internet access. Follow the deployment steps above, then:
 
-- **Prepare the image beforehand.** Build or download a pinned image outside the offline environment, then transfer it or mirror it into a registry reachable privately from the VPC. Replace the public image reference in the run command. Building inside the VPC requires internal mirrors of the base images and Python packages.
-- **Keep access private.** Use private DNS and an internal gateway or load balancer. No public IP or internet gateway is needed for the API. Keep authentication and access controls in place.
-- **Check supporting services.** Authentication, certificate management, and log collection must also work without public internet access.
-- **Account for the documentation UI.** The default `/docs` and `/redoc` pages load browser assets from public CDNs. Use `/openapi.json` with an offline API client, or adapt the application to [self-host those assets](https://fastapi.tiangolo.com/how-to/custom-docs-ui-assets/).
+- Build or download a pinned image on a connected machine, then transfer it to your VPC or private registry.
+- Use private DNS and an internal gateway with your usual access controls. Authentication, certificates, and logging must also work offline.
+- Verify `/health` and an estimation request with internet access blocked.
 
-Run the verification requests with internet egress blocked, both directly and through your internal gateway. Updates require importing a new image; the API does not automatically refresh its bundled datasets.
+The `/docs` and `/redoc` pages need public CDN assets. For offline use, access `/openapi.json` with an API client or [self-host the documentation assets](https://fastapi.tiangolo.com/how-to/custom-docs-ui-assets/).
+
+To update the API or its bundled data, import a new image.
 
 ## Keeping it running
 
