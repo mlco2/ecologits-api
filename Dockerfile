@@ -16,7 +16,7 @@ COPY app /app/app
 # Run as a dedicated non-root user.
 RUN groupadd --gid 10001 app \
     && useradd --uid 10001 --gid app --create-home app
-USER app
+USER 10001:10001
 
 EXPOSE 8000
 

@@ -4,50 +4,53 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
   pytest:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.13"]
     steps:
-      #----------------------------------------------
-      #       check-out repo and set-up python
-      #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v4
 
       - name: Set up Python
-        id: setup-python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
 
-      #----------------------------------------------
-      #  -----  install & configure uv  -----
-      #----------------------------------------------
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
-          version: "latest"
+          version: "0.11"
+          enable-cache: true
 
-      #----------------------------------------------
-      #       load cached venv if cache exists
-      #----------------------------------------------
-      - name: Load cached venv
-        id: cached-uv-dependencies
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/uv.lock') }}
-
-      #----------------------------------------------
-      # install dependencies if cache does not exist
-      #----------------------------------------------
       - name: Install dependencies
-        if: steps.cached-uv-dependencies.outputs.cache-hit != 'true'
-        run: uv sync --group dev
+        run: uv sync --locked --group dev
 
-      #----------------------------------------------
-      #              run test suite
-      #----------------------------------------------
       - name: Run tests
-        run: uv run pytest
+        run: uv run --locked --no-sync pytest
+
+  docker-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Lint Dockerfile
+        run: docker run --rm -i hadolint/hadolint:v2.15.1 < Dockerfile
+      - uses: docker/setup-buildx-action@v3
+      - name: Build production image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: ecologits-api:ci
+          cache-from: type=gha,scope=docker-smoke
+          cache-to: type=gha,scope=docker-smoke,mode=max
+      - name: Check production container
+        run: bash .github/scripts/check-container.sh ecologits-api:ci
